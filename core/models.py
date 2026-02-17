@@ -1,15 +1,18 @@
 from dataclasses import dataclass
-from typing import Dict, Any, List
+from typing import Dict, Any
+
 
 @dataclass
 class Message:
     role: str
-    content: str
+    content: str | None
+
 
 @dataclass
 class ToolCall:
     name: str
     arguments: Dict[str, Any]
+
 
 @dataclass
 class LLMResponse:
