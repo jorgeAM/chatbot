@@ -15,5 +15,8 @@ class ToolRegistry:
     def schema(self) -> str:
         lines = []
         for tool in self._tools.values():
-            lines.append(f"- {tool.name}: {tool.description}")
+            lines.append(
+                f"- {tool.name}: {tool.description}\n Args schema: {tool.schema()}"
+            )
+
         return "\n".join(lines)

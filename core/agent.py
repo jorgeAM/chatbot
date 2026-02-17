@@ -2,6 +2,7 @@ from llm.base import LLM
 from core.models import Message
 from typing import List, Optional
 from tools.registry import ToolRegistry
+from pydantic import ValidationError
 
 
 class Agent:
@@ -20,7 +21,12 @@ class Agent:
             if not tool:
                 return "Tool not found"
 
-            result = tool.execute(response.tool_call.arguments)
+            try:
+                validated_args = tool.validate(response.tool_call.arguments)
+            except ValidationError as e:
+                return f"Invalid arguments {e}"
+
+            result = tool.execute(validated_args)
             self.memory.append(
                 Message(role="assistant", content=f"Tool result: {result}")
             )

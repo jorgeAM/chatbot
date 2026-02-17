@@ -29,13 +29,15 @@ class OllamaLLM(LLM):
 
         message_dicts = [{"role": "system", "content": system_prompt}]
         message_dicts.extend(
-            [{"role": msg.role, "content": msg.content} for msg in messages]
+            [{"role": msg.role, "content": msg.content or ""} for msg in messages]
         )
 
         response = chat(model=self.model, messages=message_dicts)
 
+        response_content = response.message.content or ""
+
         try:
-            content = json.loads(response.message.content)
+            content = json.loads(response_content)
             if "tool" in content:
                 return LLMResponse(
                     tool_call=ToolCall(
@@ -45,4 +47,4 @@ class OllamaLLM(LLM):
         except Exception:
             pass
 
-        return LLMResponse(content=response.message.content, model=self.model)
+        return LLMResponse(content=response_content, model=self.model)
