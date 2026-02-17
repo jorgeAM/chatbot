@@ -1,13 +1,9 @@
-from ollama import chat
-
+from llm.ollama import OllamaLLM
+from core.models import Message
 
 def main():
-    print("Hello from chatbot!")
-
-    response = chat(
-        model="llama3.1:8b", messages=[{"role": "user", "content": "tell me a joke"}]
-    )
-
+    llm = OllamaLLM()
+    response = llm.chat(messages=[Message(role="user", content="tell me a joke")])
     print(response)
 
 
