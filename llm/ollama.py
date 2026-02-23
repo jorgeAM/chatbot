@@ -25,7 +25,12 @@ class OllamaLLM(LLM):
         IMPORTANT: Use the available tools when the user asks for information that requires them."""
 
         if tools_schema:
-            system_prompt += f"\n\nAvailable tools:\n{tools_schema}"
+            tools = json.loads(tools_schema)
+            tool_lines = [
+                f"- {t['name']}: {t['description']}\n Args schema: {t['parameters']}"
+                for t in tools
+            ]
+            system_prompt += "\n\nAvailable tools:\n" + "\n".join(tool_lines)
 
         message_dicts = [{"role": "system", "content": system_prompt}]
         message_dicts.extend(

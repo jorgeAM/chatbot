@@ -1,3 +1,4 @@
+import json
 from typing import Dict
 from tools.base import Tool
 
@@ -13,10 +14,12 @@ class ToolRegistry:
         return self._tools.get(name)
 
     def schema(self) -> str:
-        lines = []
-        for tool in self._tools.values():
-            lines.append(
-                f"- {tool.name}: {tool.description}\n Args schema: {tool.schema()}"
-            )
-
-        return "\n".join(lines)
+        tools = [
+            {
+                "name": tool.name,
+                "description": tool.description,
+                "parameters": tool.schema(),
+            }
+            for tool in self._tools.values()
+        ]
+        return json.dumps(tools)
